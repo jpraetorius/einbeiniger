@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     backports (3.1.1)
+    bcrypt-ruby (3.0.1)
     daemons (1.1.5)
     eventmachine (1.0.3)
     rack (1.5.2)
@@ -32,6 +33,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt-ruby
   rack-protection
   sinatra
   sinatra-reloader
