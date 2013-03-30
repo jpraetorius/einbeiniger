@@ -8,7 +8,10 @@ require 'bundler/setup'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'mongo'
-#require 'rack/csrf'
+require 'json'
+
+# internal classes
+require 'registration'
 
 use Rack::Session::Pool
 use Rack::Protection, {:use => [:form_token, :remote_referrer]}
@@ -40,6 +43,7 @@ helpers do
 		"<input type='hidden' name='authenticity_token' value='#{token}' />"
 	end
 
+	# copied form Rack::Protection, as it is not exposed there
 	def random_string(secure = defined? SecureRandom)
 		secure ? SecureRandom.hex(32) : "%032x" % rand(2**128-1)
 	end
@@ -65,5 +69,16 @@ post '/register' do
 		redirect "/"
 	end
 
-	erb :register
+	r = Registration.new
+	r.name = params[:name]
+	r.skype = params[:skype]
+	r.email = params[:mail]
+	r.twitter = params[:twitter]
+	r.topics = params[:topics]
+
+	settings.registrations.insert(r.to_hash)
+
+	@count = settings.registrations.count
+
+	erb :thanks, :locals => {:count => @count}
 end
