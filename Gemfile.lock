@@ -3,8 +3,11 @@ GEM
   specs:
     backports (3.1.1)
     bcrypt-ruby (3.0.1)
+    bson (1.5.2)
     daemons (1.1.5)
     eventmachine (1.0.3)
+    mongo (1.5.2)
+      bson (= 1.5.2)
     rack (1.5.2)
     rack-protection (1.5.0)
       rack
@@ -34,6 +37,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt-ruby
+  mongo
   rack-protection
   sinatra
   sinatra-reloader
