@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Einbeiniger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Le styles -->
+    <link href='http://fonts.googleapis.com/css?family=Pacifico|Roboto:300,700' rel='stylesheet' type='text/css'>
+    <link href="css/app.css" rel="stylesheet">
+    
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57x57.png">
+  </head>
+
+  <body>
+
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">WRINTs halbautomatischer Einbeiniger</a>
+          <ul class="nav pull-right">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Log in
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <i class="icon-signin"> </i>Log in
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div><!-- /.navbar -->
+
+    <div class="container">
+      <%= yield %>
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/app.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+      <div class="row-fluid">
+        <div class="span12">
+          <h2 class="script">Anmelden</h2>
+          <p>Jeder hat eine Geschichte zu erzählen, auch Du. Die Ferngespräche sind der Versuch dies jeden tun zu lassen. Darum ist auch jedes Thema willkommen. Gib einfach an, worüber Du mit Holgi sprechen willst.</p>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12">
+          <form action="" method="post">
+            <label for="name">Name</label>
+            <input type="text" placeholder="Dein Name" name="name" id="name" class="span4" />
+            <span class="help-block">Dein Name kann irgendwas sein – Handle, Twitterkürzel (und auch Dein richtiger Name)</span>
+
+            <label for="skype">Skype Name</label>
+            <input type="text" placeholder="Dein Skype Name" name="skype" id="skype" class="span4" />
+            <span class="help-block">Das eigentliche Gespräch geht über Skype. Gib Deinen Namen an und schau, dass Du zur Sendung online bist.</span>
+
+            <label for="mail">E-Mail Adresse</label>
+            <input type="text" placeholder="Deine E-Mail Adresse" name="mail" id="mail" class="span4" />
+            <span class="help-block">Damit Holgi Dich kontaktieren kann. Bitte gib eine funktionierende Adresse an.</span>
+
+            <label for="twitter">Twitter</label>
+            <div class="input-prepend">
+              <span class="add-on">@</span>
+              <input type="text" placeholder="Twittername" name="twitter" id="twitter" class="span4" />
+            </div>
+            <span class="help-block">Ebenfalls als Kontaktmöglichkeit. Falls Du auf Twitter bist – hinterlass bitte Deinen Nutzernamen</span>
+
+            <label for="topics">Themen</label>
+            <textarea rows="7" class="span8" name="topics" id="topics"></textarea>
+            <span class="help-block">Gib kurz in Stichworten an, über welche Themen Du reden magst</span>
+
+            <%= csrf_tag %>
+
+            <button type="submit" class="btn btn-primary">Anmelden</button>
+          </form>
+       </div>
+      </div>
