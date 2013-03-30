@@ -16,5 +16,6 @@ use Rack::Protection::RemoteReferrer
 use Rack::Protection::EscapedParams
 
 get '/' do
-	erb :index
+	@registration_open = rand(2) > 0;
+	erb :index, :locals => {:registration_open => @registration_open}
 end
