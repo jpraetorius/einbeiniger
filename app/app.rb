@@ -84,7 +84,7 @@ end
 # route handlers
 get '/' do
 	@registration_open = registration_open?
-	erb :index, :locals => {:registration_open => @registration_open}
+	erb :index
 end
 
 get '/register' do
@@ -94,6 +94,11 @@ get '/register' do
 	end
 
 	erb :register
+end
+
+get '/thanks' do
+	@count = get_count
+	erb :thanks
 end
 
 get '/admin' do
@@ -157,9 +162,7 @@ post '/register' do
 
 	settings.registrations.insert(r.to_hash)
 
-	@count = get_count
-
-	erb :thanks, :locals => {:count => @count}
+	redirect '/thanks'
 end
 
 post '/login' do
