@@ -1,3 +1,9 @@
+      <% if flash[:message] %>
+      <div class="alert alert-info">
+        <%= flash[:message] %>
+      </div>
+      <% end %>
+
       <!-- Jumbotron -->
       <div class="jumbotron">
         <h1 class="hidden-phone hidden-tablet">Der <span id="halbautomatisch" class="script">halbautomatische</span> <span id="einbeinig">Einbeinige</span></h1>

@@ -1,0 +1,34 @@
+<div class="row-fluid" id="admin-row">
+	<div class="span3" id="admin-nav">
+		<ul class="nav nav-list">
+			<li class="nav-header">Administration</li>
+			<li><a href="/admin">Übersicht</a></li>
+			<li><a href="#">Anmeldungen</a></li>
+			<li class="active"><a href="#">Einstellungen</a></li>
+		</ul>
+	</div>
+	<div class="span9">
+		<h2>Einstellungen</h2>
+		<div class="row-fluid">
+			<div class="span12">
+				<form action="/settings" method="post">
+					<label for="register">Registrierungen</label>
+					<div class="switch" data-on="success" data-off="danger" data-animated="false" data-on-label="Ein" data-off-label="Aus">
+						<input type="checkbox" name="register" id="register" checked="checked" value="on">
+					</div>
+					<span class="help-block">Wenn der Schalter auf “Ein” steht, können sich die Hörenden anmelden.</span>
+
+					<label class="checkbox" for="delete_all">
+						<input type="checkbox" name="delete_all" id="delete_all" value="delete_all_really" />Alle Anmeldungen löschen 
+					</label>
+					<span class="help-block">Wenn Du diese Checkbox selektierst, werden alle momentan vorhandenen Anmeldungen gelöscht.</span>
+
+					<%== csrf_tag %>
+
+					<button type="submit" class="btn btn-primary">Speichern</button>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>

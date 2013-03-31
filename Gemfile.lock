@@ -25,6 +25,8 @@ GEM
       rack-test
       sinatra (~> 1.3.0)
       tilt (~> 1.3)
+    sinatra-flash (0.3.0)
+      sinatra (>= 1.0.0)
     sinatra-reloader (1.0)
       sinatra-contrib
     thin (1.5.1)
@@ -42,5 +44,6 @@ DEPENDENCIES
   mongo
   rack-protection
   sinatra
+  sinatra-flash
   sinatra-reloader
   thin

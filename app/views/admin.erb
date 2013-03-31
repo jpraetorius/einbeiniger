@@ -4,10 +4,25 @@
         <li class="nav-header">Administration</li>
         <li class="active"><a href="#">Übersicht</a></li>
         <li><a href="#">Anmeldungen</a></li>
-        <li><a href="#">Einstellungen</a></li>
+        <li><a href="/settings">Einstellungen</a></li>
       </ul>
     </div>
     <div class="span9">
-      <h2>Content</h2>
+      <h2>Hallo <span class="script"><%= session[:user].name %></span></h2>
+      <p class="lead">Hier ein schneller Überblick über das aktuelle Geschehen</p>
+      <div class="row-fluid">
+        <div class="span3">Anmeldungen:</div>
+        <div class="span9">
+          <% if registration_open? %>
+            <span class="text-success"><i class="icon-ok"> </i>sind möglich</span>
+          <% else %>
+            <span class="text-error"><i class="icon-off"> </i>sind abgeschaltet</span>
+          <% end %>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3">Eingetragene Anmeldungen:</div>
+        <div class="span9"><%= get_count %></div>
+      </div>
     </div>
   </div>

@@ -6,6 +6,7 @@ require 'bundler/setup'
 
 # all other dependencies
 require 'sinatra'
+require 'sinatra/flash'
 require 'sinatra/reloader'
 require 'mongo'
 require 'json'
@@ -44,8 +45,19 @@ helpers do
 		registration_open
 	end
 
+	def authenticated?
+		if (!logged_in?)
+			flash[:message] = "Bitte melde Dich an um diese Funktion zu benutzen."
+			redirect '/'
+		end
+	end
+
 	def logged_in?
 		!session[:user].nil?
+	end
+
+	def get_count
+		settings.registrations.count
 	end
 
 	def csrf_tag
@@ -84,7 +96,13 @@ get '/register' do
 end
 
 get '/admin' do
+	authenticated?
 	erb :admin, :layout => :admin_layout
+end
+
+get '/settings' do
+	authenticated?
+	erb :settings, :layout => :admin_layout
 end
 
 post '/register' do
@@ -103,7 +121,7 @@ post '/register' do
 
 	settings.registrations.insert(r.to_hash)
 
-	@count = settings.registrations.count
+	@count = get_count
 
 	erb :thanks, :locals => {:count => @count}
 end
