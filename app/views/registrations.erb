@@ -9,6 +9,23 @@
     </div>
     <div class="span9">
       <h2>Anmeldungen</h2>
-      <p class="lead">Hier ein schneller Überblick über das aktuelle Geschehen</p>
+      <p class="lead">Es sind momentan <span id="counter"><%=@count%></span> Anmeldungen in der Warteschleife</p>
+      <div class="row-fluid">
+        <div class="span3" style="height:100%; overflow-x: hidden; overflow-y: scroll">
+          <ul class="nav nav-list">
+          <%for i in 1..50%>  
+          <% @registrations.each do |registration| %>
+            <li><em><%=registration.name%> – <%=registration.skype%></em><br/>
+                <%=registration.topics[0..20]%>
+            </li>
+          <% end %>
+          <% end %>
+          </ul>
+        </div>
+        <div class="span9">
+        </div>
+      </div>
+      <ul>
+    </ul>
     </div>
   </div>

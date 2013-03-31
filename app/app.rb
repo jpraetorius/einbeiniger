@@ -116,7 +116,13 @@ end
 
 get '/registrations' do
 	authenticated?
-	erb :registrations, :layout => :admin_layout
+	@count = get_count
+	@results = settings.registrations.find.sort(:registered_at)
+	@registrations = Array.new
+	@results.each do |result|
+		@registrations << Registration.new(result)
+	end
+	erb :registrations, :layout => :admin_layout, :locals => {:count => @count, :registrations => @registrations}
 end
 
 get '/user_img' do
@@ -135,7 +141,7 @@ post '/register' do
 		redirect "/"
 	end
 
-	r = Registration.new
+	r = Registration.new({})
 	r.name = params[:name]
 	r.skype = params[:skype]
 	r.email = params[:mail]
@@ -210,11 +216,11 @@ post '/settings' do
 		end
 
 		if params[:avatar] #&& (tmpfile = params[:avatar][:tempfile]) && (name = params[:avatar][:filename])
-			env.keys.each do |key|
-				logger.info "value for key '#{key}' is: '#{file_hash[key]}'"
-			end
-			type = file_hash[:type]
-			tmpfile = file_hash['tempfile']
+			# env.keys.each do |key|
+			# 	logger.info "value for key '#{key}' is: '#{env[key]}'"
+			# end
+			type = params[:avatar][:type]
+			tmpfile = params[:avatar]['tempfile']
 			size = tmpfile.size
 			if ((size <= 30720) && (%w(image/png image/jpg image/jpeg).contains type))
 				contents = tmpfile.read

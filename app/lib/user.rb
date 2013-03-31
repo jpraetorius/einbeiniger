@@ -10,9 +10,6 @@ class User
 
 	include BCrypt
 
-	def initialize
-	end
-
 	def initialize(mongo_hash_data)
 		self.id = mongo_hash_data['_id']
 		self.password_hash = mongo_hash_data['password_hash']
