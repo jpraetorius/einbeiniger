@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Einbeiniger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Le styles -->
+    <link href='http://fonts.googleapis.com/css?family=Pacifico|Roboto:300,700' rel='stylesheet' type='text/css'>
+    <link href="css/app.css" rel="stylesheet">
+    
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57x57.png">
+  </head>
+
+  <body id="admin-body">
+
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">WRINTs halbautomatischer Einbeiniger</a>
+          <ul class="nav pull-right">
+            <li class="dropdown">
+              <%if logged_in? %>
+              <a href="#" class="dropdown-toggle logged-in" data-toggle="dropdown">
+                <img src="http://placehold.it/48x48" class="img-round" width="48" height="48" alt="avatar" />
+                <%= h session[:user].name %>
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="/administration"><i class="icon-cogs"></i> Administration</a></li>
+                <li><a href="/logout"><i class="icon-signout"></i> Ausloggen</a></li>
+              </ul>
+              <% else %>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Einloggen
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <form action="login" method="post">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" />
+                    <label for="password">Passwort</label>
+                    <input type="password" name="password" id="password" />
+                    <%== csrf_tag %>
+                    <button type="submit" class="btn btn-primary">Einloggen</button>
+                  </form>
+                </li>
+              </ul>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div><!-- /.navbar -->
+
+    <div class="container-fluid" id="admin-container">
+      <%== yield %>
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/app.min.js"></script>
+  </body>
+</html>

@@ -10,11 +10,13 @@ require 'sinatra/reloader'
 require 'mongo'
 require 'json'
 require 'bcrypt'
+require 'erubis'
 
 # internal classes
 require 'registration'
 require 'user'
 
+set :erb, :escape_html => true
 use Rack::Session::Pool
 use Rack::Protection, {:use => [:form_token, :remote_referrer]}
 use Rack::Protection::EscapedParams
@@ -44,10 +46,6 @@ helpers do
 
 	def logged_in?
 		!session[:user].nil?
-	end
-
-	def h(text)
-		ERB::Util.html_escape(text)
 	end
 
 	def csrf_tag
@@ -85,6 +83,10 @@ get '/register' do
 	erb :register
 end
 
+get '/admin' do
+	erb :admin, :layout => :admin_layout
+end
+
 post '/register' do
 	clear_csrf_tag
 	# we only accept calls for this, when the registration is really open
@@ -114,7 +116,7 @@ post '/login' do
 	logger.info @user
 	if @user.password == params[:password]
 		session[:user] = @user
-		redirect '/'
+		redirect '/admin'
 	else
 		redirect '/'
 	end
