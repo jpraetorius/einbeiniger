@@ -51,9 +51,17 @@ helpers do
 	end
 
 	def csrf_tag
-		token = random_string
-		session[:csrf] = token
+		if (session[:csrf].nil?)
+			token = random_string
+			session[:csrf] = token
+		else
+			token = session[:csrf]
+		end
 		"<input type='hidden' name='authenticity_token' value='#{token}' />"
+	end
+
+	def clear_csrf_tag
+		session[:csrf] = nil
 	end
 
 	# copied form Rack::Protection, as it is not exposed there
@@ -78,6 +86,7 @@ get '/register' do
 end
 
 post '/register' do
+	clear_csrf_tag
 	# we only accept calls for this, when the registration is really open
 	if (!registration_open?)
 		redirect "/"
@@ -98,6 +107,7 @@ post '/register' do
 end
 
 post '/login' do
+	clear_csrf_tag
 	@result = settings.users.find_one('name' => params[:username])
 	logger.info @result
 	@user = User.new(@result)
