@@ -114,6 +114,11 @@ get '/logout' do
 	redirect '/'
 end
 
+get '/registrations' do
+	authenticated?
+	erb :registrations, :layout => :admin_layout
+end
+
 get '/user_img' do
 	if session[:user].nil? || session[:user].avatar.nil?
 		send_file 'public/img/default_avatar.gif', :type => :gif
@@ -162,6 +167,7 @@ post '/login' do
 end
 
 post '/settings' do
+	authenticated?
 	clear_csrf_tag
 	if (params[:action].eql? 'application')
 		# update application settings
@@ -204,8 +210,7 @@ post '/settings' do
 		end
 
 		if params[:avatar] #&& (tmpfile = params[:avatar][:tempfile]) && (name = params[:avatar][:filename])
-			file_hash = env['rack.request.form_hash'][:avatar]
-			file_hash.keys.each do |key|
+			env.keys.each do |key|
 				logger.info "value for key '#{key}' is: '#{file_hash[key]}'"
 			end
 			type = file_hash[:type]
