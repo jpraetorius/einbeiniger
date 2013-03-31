@@ -1,3 +1,4 @@
+# encoding: utf-8
 # add local classes
 $LOAD_PATH << './lib'
 
@@ -105,6 +106,23 @@ get '/settings' do
 	erb :settings, :layout => :admin_layout
 end
 
+get '/logout' do
+	clear_csrf_tag
+	session[:user] = nil
+	session.clear
+	flash[:message] = "Du hast Dich erfolgreich ausgeloggt"
+	redirect '/'
+end
+
+get '/user_img' do
+	if session[:user].nil? || session[:user].avatar.nil?
+		send_file 'public/img/default_avatar.gif', :type => :gif
+	else
+		content_type session[:user].avatar_type
+		Base64.decode(session[:user].avatar)
+	end
+end
+
 post '/register' do
 	clear_csrf_tag
 	# we only accept calls for this, when the registration is really open
@@ -118,6 +136,7 @@ post '/register' do
 	r.email = params[:mail]
 	r.twitter = params[:twitter]
 	r.topics = params[:topics]
+	r.registered_at = Time.now
 
 	settings.registrations.insert(r.to_hash)
 
@@ -129,12 +148,81 @@ end
 post '/login' do
 	clear_csrf_tag
 	@result = settings.users.find_one('name' => params[:username])
-	logger.info @result
-	@user = User.new(@result)
-	logger.info @user
-	if @user.password == params[:password]
-		session[:user] = @user
-		redirect '/admin'
+	if (@result.nil?)
+		redirect '/'
+	else
+		@user = User.new(@result)
+		if @user.password == params[:password]
+			session[:user] = @user
+			redirect '/admin'
+		else
+			redirect '/'
+		end
+	end
+end
+
+post '/settings' do
+	clear_csrf_tag
+	if (params[:action].eql? 'application')
+		# update application settings
+		if (params[:register]) 
+			@request_register = true
+			flash[:message] = "Anmeldungen sind jetzt zugelassen"
+		else
+			@request_register = false
+			flash[:message] = "Anmeldungen sind jetzt nicht möglich"
+		end
+		doc = settings.config.find_one('name' => 'registration_open')
+		if (doc.nil?)
+			doc = {'name' => 'registration_open', 'value' => @request_register}
+			settings.config.insert(doc)
+		else
+			id = doc['_id']
+			doc['value'] = @request_register
+			settings.config.update({"_id" => id}, doc)
+		end
+
+		if (params[:delete_all].eql? 'delete_all_really') 
+			settings.registrations.remove
+			flash[:message] = "Alle Anmeldungen gelöscht"
+		end
+		redirect '/settings'
+	elsif (params[:action].eql? 'user')
+		@user = session[:user]	
+		
+		id = @user.id
+		@user.name = params[:username]
+
+		pwd = params[:password].strip
+		if(!pwd.nil? && !pwd.empty?)
+			pwd_confirm = params[:passwordconfirm].strip
+			if (pwd.eql?(pwd_confirm))
+				@user.password=pwd
+			else
+				flash[:error] = "Passwort nicht geändert – Angaben stimmten nicht überein" 
+			end
+		end
+
+		if params[:avatar] #&& (tmpfile = params[:avatar][:tempfile]) && (name = params[:avatar][:filename])
+			file_hash = env['rack.request.form_hash'][:avatar]
+			file_hash.keys.each do |key|
+				logger.info "value for key '#{key}' is: '#{file_hash[key]}'"
+			end
+			type = file_hash[:type]
+			tmpfile = file_hash['tempfile']
+			size = tmpfile.size
+			if ((size <= 30720) && (%w(image/png image/jpg image/jpeg).contains type))
+				contents = tmpfile.read
+				@user.avatar = Base64.encode(contents)
+				@user.avatar_type = type
+			else
+				flash[:error] = "Bild nicht gespeichert: zu gross oder falscher Typ" 
+			end
+		end
+
+		settings.users.update({"_id" => id}, @user.to_hash)
+		flash[:message] = "Accountänderungen gespeichert"
+		redirect '/settings'
 	else
 		redirect '/'
 	end

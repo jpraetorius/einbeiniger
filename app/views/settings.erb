@@ -1,3 +1,13 @@
+<% if flash[:message] %>
+<div class="alert alert-success">
+  <%= flash[:message] %>
+</div>
+<% end %>
+<% if flash[:error] %>
+<div class="alert alert-error">
+  <%= flash[:error] %>
+</div>
+<% end %>
 <div class="row-fluid" id="admin-row">
 	<div class="span3" id="admin-nav">
 		<ul class="nav nav-list">
@@ -12,22 +22,48 @@
 		<div class="row-fluid">
 			<div class="span12">
 				<form action="/settings" method="post">
-					<label for="register">Registrierungen</label>
-					<div class="switch" data-on="success" data-off="danger" data-animated="false" data-on-label="Ein" data-off-label="Aus">
-						<input type="checkbox" name="register" id="register" <%= registration_open? ? 'checked="checked"' : '' %> value="on">
-					</div>
-					<span class="help-block">Wenn der Schalter auf “Ein” steht, können sich die Hörenden anmelden.</span>
+					<fieldset>
+						<legend>Applikationseinstellungen</legend>
+						<label for="register">Registrierungen</label>
+						<div class="switch" data-on="success" data-off="danger" data-animated="false" data-on-label="Ein" data-off-label="Aus">
+							<input type="checkbox" name="register" id="register" <%= registration_open? ? 'checked="checked"' : '' %> value="on">
+						</div>
+						<span class="help-block">Wenn der Schalter auf “Ein” steht, können sich die Hörenden anmelden.</span>
 
-					<label class="checkbox" for="delete_all">
-						<input type="checkbox" name="delete_all" id="delete_all" value="delete_all_really" />Alle Anmeldungen löschen 
-					</label>
-					<span class="help-block">Wenn Du diese Checkbox selektierst, werden alle momentan vorhandenen Anmeldungen gelöscht.</span>
+						<label class="checkbox" for="delete_all">
+							<input type="checkbox" name="delete_all" id="delete_all" value="delete_all_really" />Alle Anmeldungen löschen 
+						</label>
+						<span class="help-block">Wenn Du diese Checkbox selektierst, werden alle momentan vorhandenen Anmeldungen gelöscht.</span>
 
-					<%== csrf_tag %>
+						<%== csrf_tag %>
 
-					<button type="submit" class="btn btn-primary">Speichern</button>
+						<button type="submit" class="btn btn-primary" value="application" name="action">Speichern</button>
+					</fieldset>
 				</form>
+				<form action="/settings" method="post" enctype="multipart/form-data">
+					<fieldset>
+						<legend>Account-Einstellungen</legend>
+						<label for="username">Name</label>
+						<input type="text" placeholder="Username" name="username" id="username" class="span4" value="<%= session[:user].name %>"/>
+						<span class="help-block">Der Nutzername, mit dem Du Dich anmeldest.</span>
 
+						<label for="password">Neues Passwort</label>
+						<input type="password" name="password" id="password" class="span4" />
+						<label for="passwordconfirm">Passwort wiederholen</label>
+						<input type="password" name="passwordconfirm" id="passwordconfirm" class="span4" />
+						<span class="help-block">Wenn Du Dein Passwort ändern willst: gib hier 2x das Neue ein.</span>
+
+						<label for="avatar">Avatar-Bild</label>
+						<input type="file" name="avatar" id="avatar" class="span4" />
+						<span class="help-block">Wenn Du Dein Avatarbild ändern willst: lade hier das neue hoch.<br/>
+							<small>Wird in 48x48 angezeigt, max. 30kB, jpg/png</small>
+						</span>
+
+						<%== csrf_tag %>
+
+						<button type="submit" class="btn btn-primary" value="user" name="action">Speichern</button>
+					</fieldset>
+				</form>
 			</div>
 		</div>
 	</div>

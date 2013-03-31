@@ -5,6 +5,7 @@ class Registration
 	attr_accessor :skype
 	attr_accessor :twitter
 	attr_accessor :topics
+	attr_accessor :registered_at
 	attr_accessor :tags
 
 	# Used for saving to mongodb
@@ -15,6 +16,7 @@ class Registration
 			:skype => @skype,
 			:twitter => @twitter,
 			:topics => @topics,
+			:registered_at => @registered_at,
 			:tags => @tags
 		}
 	end

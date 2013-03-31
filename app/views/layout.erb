@@ -28,12 +28,12 @@
             <li class="dropdown">
               <%if logged_in? %>
               <a href="#" class="dropdown-toggle logged-in" data-toggle="dropdown">
-                <img src="http://placehold.it/48x48" class="img-round" width="48" height="48" alt="avatar" />
+                <img src="/user_img" class="img-round" width="48" height="48" alt="avatar" />
                 <%= session[:user].name %>
                 <b class="caret"></b>
               </a>
               <ul class="dropdown-menu">
-                <li><a href="/administration"><i class="icon-cogs"></i> Administration</a></li>
+                <li><a href="/admin"><i class="icon-cogs"></i> Administration</a></li>
                 <li><a href="/logout"><i class="icon-signout"></i> Ausloggen</a></li>
               </ul>
               <% else %>
