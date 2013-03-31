@@ -19,6 +19,9 @@ table {
 .table {
   width: 100%;
   margin-bottom: @baseLineHeight;
+  tr:last-child {
+    border-bottom: 1px solid @tableBorder;
+  }
   // Cells
   th,
   td {

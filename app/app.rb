@@ -117,12 +117,18 @@ end
 get '/registrations' do
 	authenticated?
 	@count = get_count
-	@results = settings.registrations.find.sort(:registered_at)
+	@max_pages = @count / 10
+	if (@count % 10 > 0)
+		@max_pages = @max_pages + 1
+	end
+	@current_page = 1
+	skip = (@current_page-1) * 10
+	@results = settings.registrations.find.sort(:registered_at).skip(skip).limit(10)
 	@registrations = Array.new
 	@results.each do |result|
 		@registrations << Registration.new(result)
 	end
-	erb :registrations, :layout => :admin_layout, :locals => {:count => @count, :registrations => @registrations}
+	erb :registrations, :layout => :admin_layout
 end
 
 get '/user_img' do

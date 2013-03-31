@@ -1,31 +1,53 @@
-  <div class="row-fluid" id="admin-row">
-    <div class="span3" id="admin-nav">
-      <ul class="nav nav-list">
-        <li class="nav-header">Administration</li>
-        <li><a href="/admin">Übersicht</a></li>
-        <li class="active"><a href="#">Anmeldungen</a></li>
-        <li><a href="/settings">Einstellungen</a></li>
+<div class="row-fluid" id="admin-row">
+  <div class="span3" id="admin-nav">
+    <ul class="nav nav-list">
+      <li class="nav-header">Administration</li>
+      <li><a href="/admin">Übersicht</a></li>
+      <li class="active"><a href="#">Anmeldungen</a></li>
+      <li><a href="/settings">Einstellungen</a></li>
+    </ul>
+  </div>
+  <div class="span9">
+    <h2>Anmeldungen</h2>
+    <p class="lead">Es sind momentan <span id="counter"><%=@count%></span> Anmeldungen in der Warteschleife</p>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Skype</th>
+          <th>E-Mail</th>
+          <th>Thema</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @registrations.each do |registration| %>
+        <tr>
+          <td><%=registration.name%></td>
+          <td><%=registration.skype%></td>
+          <td><%=registration.email%></td>
+          <td><%=registration.topics[0..50]%></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%if @count > 10%>
+    <div class="pagination">
+      <ul>
+        <% if @current_page > 1%>
+        <li><a href="#">&laquo; Zurück</a></li>
+        <% else %>
+        <li class="disabled"><a href="#">&laquo; Zurück</a></li>
+        <% end %>
+        <% for page in 1..@max_pages do %>
+        <li <%=(page.eql? @current_page) ? "class='active'":''%>><a href="#"><%=page%></a></li>
+        <% end %>
+        <% if @current_page < @max_pages%>
+        <li><a href="#">Weiter &raquo;</a></li>
+        <% else %>
+        <li class="disabled"><a href="#">Weiter &raquo;</a></li>
+        <% end %>
       </ul>
     </div>
-    <div class="span9">
-      <h2>Anmeldungen</h2>
-      <p class="lead">Es sind momentan <span id="counter"><%=@count%></span> Anmeldungen in der Warteschleife</p>
-      <div class="row-fluid">
-        <div class="span3" style="height:100%; overflow-x: hidden; overflow-y: scroll">
-          <ul class="nav nav-list">
-          <%for i in 1..50%>  
-          <% @registrations.each do |registration| %>
-            <li><em><%=registration.name%> – <%=registration.skype%></em><br/>
-                <%=registration.topics[0..20]%>
-            </li>
-          <% end %>
-          <% end %>
-          </ul>
-        </div>
-        <div class="span9">
-        </div>
-      </div>
-      <ul>
-    </ul>
-    </div>
+    <% end %>
   </div>
+</div>
