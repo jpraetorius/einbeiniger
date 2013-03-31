@@ -9,23 +9,28 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'mongo'
 require 'json'
+require 'bcrypt'
 
 # internal classes
 require 'registration'
+require 'user'
 
 use Rack::Session::Pool
 use Rack::Protection, {:use => [:form_token, :remote_referrer]}
 use Rack::Protection::EscapedParams
 
+include Mongo
+include BCrypt
+
 # setup
 configure do
-	include Mongo
 	@db = MongoClient.new("127.0.0.1", 27017).db('einbeiniger')
 	set :users, @db.collection('users');
 	set :registrations, @db.collection('registrations')
 	set :config, @db.collection('configuration')
 end
 
+# helpers
 helpers do
 	def registration_open?
 		reg_setting = settings.config.find_one('name' => 'registration_open')
@@ -35,6 +40,14 @@ helpers do
 			registration_open = reg_setting['value']
 		end
 		registration_open
+	end
+
+	def logged_in?
+		!session[:user].nil?
+	end
+
+	def h(text)
+		ERB::Util.html_escape(text)
 	end
 
 	def csrf_tag
@@ -49,6 +62,7 @@ helpers do
 	end
 end
 
+# route handlers
 get '/' do
 	@registration_open = registration_open?
 	erb :index, :locals => {:registration_open => @registration_open}
@@ -81,4 +95,17 @@ post '/register' do
 	@count = settings.registrations.count
 
 	erb :thanks, :locals => {:count => @count}
+end
+
+post '/login' do
+	@result = settings.users.find_one('name' => params[:username])
+	logger.info @result
+	@user = User.new(@result)
+	logger.info @user
+	if @user.password == params[:password]
+		session[:user] = @user
+		redirect '/'
+	else
+		redirect '/'
+	end
 end

@@ -26,13 +26,34 @@
           <a class="brand" href="/">WRINTs halbautomatischer Einbeiniger</a>
           <ul class="nav pull-right">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Log in
+              <%if logged_in? %>
+              <a href="#" class="dropdown-toggle logged-in" data-toggle="dropdown">
+                <img src="http://placehold.it/48x48" class="img-round" width="48" height="48" alt="avatar" />
+                <%= h session[:user].name %>
                 <b class="caret"></b>
               </a>
               <ul class="dropdown-menu">
-                <i class="icon-signin"> </i>Log in
+                <li><a href="/administration"><i class="icon-cogs"></i> Administration</a></li>
+                <li><a href="/logout"><i class="icon-signout"></i> Ausloggen</a></li>
               </ul>
+              <% else %>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Einloggen
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <form action="login" method="post">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" />
+                    <label for="password">Passwort</label>
+                    <input type="password" name="password" id="password" />
+                    <%= csrf_tag %>
+                    <button type="submit" class="btn btn-primary">Einloggen</button>
+                  </form>
+                </li>
+              </ul>
+              <% end %>
             </li>
           </ul>
         </div>

@@ -233,10 +233,13 @@
 .navbar .nav > li > a {
   float: none;
   // Vertically center the text given @navbarHeight
-  padding: ((@navbarHeight - @baseLineHeight) / 2) 15px ((@navbarHeight - @baseLineHeight) / 2);
+  padding-top: 20px;
   color: @navbarLinkColor;
   text-decoration: none;
   text-shadow: 0 1px 0 @navbarBackgroundHighlight;
+  &.logged-in {
+    padding-top: 10px;
+  }
 }
 .navbar .nav .dropdown-toggle .caret {
   margin-top: 8px;

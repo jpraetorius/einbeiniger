@@ -7,6 +7,7 @@ class Registration
 	attr_accessor :topics
 	attr_accessor :tags
 
+	# Used for saving to mongodb
 	def to_hash
 		{
 			:name => @name, 
@@ -16,9 +17,5 @@ class Registration
 			:topics => @topics,
 			:tags => @tags
 		}
-	end
-
-	def to_json
-		JSON.generate(self.to_hash)
 	end
 end
