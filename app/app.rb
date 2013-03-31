@@ -141,7 +141,7 @@ get '/user_img' do
 		send_file 'public/img/default_avatar.gif', :type => :gif
 	else
 		content_type session[:user].avatar_type
-		Base64.decode(session[:user].avatar)
+		Base64.decode64(session[:user].avatar)
 	end
 end
 
