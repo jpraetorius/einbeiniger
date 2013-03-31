@@ -5,6 +5,7 @@ GEM
     bcrypt-ruby (3.0.1)
     bson (1.8.4)
     daemons (1.1.9)
+    erubis (2.7.0)
     eventmachine (1.0.3)
     mongo (1.8.4)
       bson (~> 1.8.4)
@@ -37,6 +38,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt-ruby
+  erubis
   mongo
   rack-protection
   sinatra
