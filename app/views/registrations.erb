@@ -15,11 +15,14 @@
       <input type="text" class="input-small" placeholder="Name">
       <input type="text" class="input-medium" placeholder="Tags">
       <button type="submit" class="btn">Suchen</button>
+      <input type="hidden" id="delete-ids" name="delete-ids" value=""/>
+      <button type="submit" class="btn btn-danger disabled" id="delete-button" disabled>Markierte löschen</button>
     </form>
 
     <table class="table table-striped table-hover" id="registrations-table">
       <thead>
         <tr>
+          <th> </th>
           <th>Name</th>
           <th>Twitter</th>
           <th>E-Mail</th>
@@ -29,6 +32,10 @@
       <tbody>
         <% @registrations.each do |registration| %>
         <tr class="data">
+          <td>
+            <i class="icon-remove-circle delete" data-id="<%=registration.id%>" rel="tooltip" title="Zum löschen markieren"> </i>
+            <i class="icon-search details" rel="tooltip" title="Details anzeigen"> </i>
+          </td>
           <td><%=registration.name%></td>
           <td><a href="https://twitter.com/<%=registration.twitter%>"><%=registration.twitter%></a></td>
           <td><a href="mailto:<%=registration.email%>"><%=registration.email%></a></td>
