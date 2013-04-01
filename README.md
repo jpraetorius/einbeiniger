@@ -43,12 +43,12 @@ Um auf das Backend zuzugreifen muss es in der Collection `users` mindestens eine
     irb(main):002:0> require 'user'
     irb(main):003:0> require 'mongo'
     irb(main):004:0> include Mongo
-    irb(main):005:0> u = User.new
+    irb(main):005:0> u = User.new({})
     irb(main):006:0> u.name = 'beispiel'
     irb(main):007:0> u.password = 'geheim'
     irb(main):008:0> db = MongoClient.new.db('einbeiniger')
     irb(main):009:0> users = db.collection('users')
-    irb(main):010:0> users.insert(u)
+    irb(main):010:0> users.insert(u.to_hash)
 
 `settings` enthält momentan nur einen einzigen Wert: `registration_open`, der angibt, ob momentan Anmeldungen entgegengenommen werden, oder nicht. Generell sind Settings als `name` => `value` Paare gespeichert.
 
