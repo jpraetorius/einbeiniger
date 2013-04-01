@@ -1,3 +1,8 @@
+<% if flash[:message] %>
+<div class="alert alert-success">
+  <%= flash[:message] %>
+</div>
+<% end %>
 <div class="row-fluid" id="admin-row">
   <div class="span3" id="admin-nav">
     <ul class="nav nav-list">
@@ -12,10 +17,11 @@
     <p class="lead">Es sind momentan <span id="counter"><%=@count%></span> Anmeldungen in der Warteschleife</p>
     <form class="form-inline" action="/registrations" method="post">
       <label>Anmeldungen filtern:</label>
-      <input type="text" name="name" class="input-small" placeholder="Name">
-      <input type="text" name="tags" class="input-medium" placeholder="Tags">
+      <input type="text" name="name" class="input-small" placeholder="Name" value="<%=@search_name%>">
+      <input type="text" name="tags" class="input-medium" placeholder="Tags" value="<%=@search_tags%>">
       <button type="submit" name="action" value="search" class="btn">Suchen</button>
       <input type="hidden" id="delete_ids" name="delete_ids" value=""/>
+      <button type="submit" name="action" value="clear" class="btn">Alle anzeigen</button>
       <button type="submit" name="action" value="delete" class="btn btn-danger disabled" id="delete-button" disabled>Markierte löschen</button>
       <%== csrf_tag %>
     </form>

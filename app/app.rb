@@ -32,6 +32,8 @@ configure do
 	set :users, @db.collection('users');
 	set :registrations, @db.collection('registrations')
 	set :config, @db.collection('configuration')
+	set :search_name, nil
+	set :search_tags, nil
 end
 
 # helpers
@@ -61,6 +63,30 @@ helpers do
 		settings.registrations.count
 	end
 
+	def find_registrations(current_page)
+		@count = get_count
+		@max_pages = @count / 10
+		if (@count % 10 > 0)
+			@max_pages = @max_pages + 1
+		end
+		skip = (current_page-1) * 10
+		@search_name = settings.search_name
+		tags = settings.search_tags
+		@search_tags = tags.nil? ? tags : tags.join(',')
+		query = Hash.new()
+		if(!@search_name.nil? && !@search_name.empty?)
+			query[:name]= Regexp.compile(@search_name)
+		end
+		if(!tags.nil? && tags.size > 0)
+			query[:tags]= {'$in' => tags}
+		end
+		@results = settings.registrations.find(query).sort(:registered_at).skip(skip).limit(10)
+		@registrations = Array.new
+		@results.each do |result|
+			@registrations << Registration.new(result)
+		end
+	end
+
 	def csrf_tag
 		if (session[:csrf].nil?)
 			token = random_string
@@ -80,8 +106,16 @@ helpers do
 		secure ? SecureRandom.hex(32) : "%032x" % rand(2**128-1)
 	end
 
-	def object_id val
+	def mongodb_id val
 		BSON::ObjectId.from_string(val)
+	end
+
+	def tags_to_array vals
+		# split on comma or whitespace, replace comma followed by whitespace first
+		# to avoid empty elements
+		tags = vals.sub(/,\s+/,',')
+		arr = tags.split(/\s|,/)
+		arr
 	end
 end
 
@@ -125,35 +159,15 @@ end
 
 get '/registrations/:page' do
 	authenticated?
-	@count = get_count
-	@max_pages = @count / 10
-	if (@count % 10 > 0)
-		@max_pages = @max_pages + 1
-	end
 	@current_page = params[:page].to_i
-	skip = (@current_page-1) * 10
-	@results = settings.registrations.find.sort(:registered_at).skip(skip).limit(10)
-	@registrations = Array.new
-	@results.each do |result|
-		@registrations << Registration.new(result)
-	end
+	find_registrations(@current_page)
 	erb :registrations, :layout => :admin_layout
 end
 
 get '/registrations' do
 	authenticated?
-	@count = get_count
-	@max_pages = @count / 10
-	if (@count % 10 > 0)
-		@max_pages = @max_pages + 1
-	end
 	@current_page = 1
-	skip = (@current_page-1) * 10
-	@results = settings.registrations.find.sort(:registered_at).skip(skip).limit(10)
-	@registrations = Array.new
-	@results.each do |result|
-		@registrations << Registration.new(result)
-	end
+	find_registrations(@current_page)
 	erb :registrations, :layout => :admin_layout
 end
 
@@ -276,11 +290,19 @@ post '/registrations' do
 		ids = params[:delete_ids].split(',')
 		ids.each do |id|
 			logger.info "About to remove id #{id}''"
-			settings.registrations.remove({"_id" => object_id(id)})
+			settings.registrations.remove({"_id" => mongodb_id(id)})
 		end
 		flash[:message] = "Anmeldungen gelöscht"
 		redirect '/registrations'
 	elsif (params[:action].eql? 'search')
+		@name = params[:name].strip
+		@tags = tags_to_array params[:tags]
+		settings.search_name=@name
+		settings.search_tags=@tags
+		redirect '/registrations'
+	elsif (params[:action].eql? 'clear')
+		settings.search_name=nil
+		settings.search_tags=nil
 		redirect '/registrations'
 	end
 	redirect '/registrations'
