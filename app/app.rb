@@ -119,6 +119,23 @@ get '/logout' do
 	redirect '/'
 end
 
+get '/registrations/:page' do
+	authenticated?
+	@count = get_count
+	@max_pages = @count / 10
+	if (@count % 10 > 0)
+		@max_pages = @max_pages + 1
+	end
+	@current_page = params[:page].to_i
+	skip = (@current_page-1) * 10
+	@results = settings.registrations.find.sort(:registered_at).skip(skip).limit(10)
+	@registrations = Array.new
+	@results.each do |result|
+		@registrations << Registration.new(result)
+	end
+	erb :registrations, :layout => :admin_layout
+end
+
 get '/registrations' do
 	authenticated?
 	@count = get_count
