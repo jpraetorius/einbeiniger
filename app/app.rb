@@ -64,12 +64,8 @@ helpers do
 	end
 
 	def find_registrations(current_page)
-		@count = get_count
-		@max_pages = @count / 10
-		if (@count % 10 > 0)
-			@max_pages = @max_pages + 1
-		end
 		skip = (current_page-1) * 10
+
 		@search_name = settings.search_name
 		tags = settings.search_tags
 		@search_tags = tags.nil? ? tags : tags.join(',')
@@ -80,6 +76,18 @@ helpers do
 		if(!tags.nil? && tags.size > 0)
 			query[:tags]= {'$in' => tags}
 		end
+
+		# set count and pages according to result
+		if (query.empty?)
+			@count = get_count
+		else
+			@count = settings.registrations.count({:query => query})
+		end
+		@max_pages = @count / 10
+		if (@count % 10 > 0)
+			@max_pages = @max_pages + 1
+		end
+
 		@results = settings.registrations.find(query).sort(:registered_at).skip(skip).limit(10)
 		@registrations = Array.new
 		@results.each do |result|
