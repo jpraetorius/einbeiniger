@@ -181,7 +181,7 @@ end
 
 get '/user_img' do
 	if session[:user].nil? || session[:user].avatar.nil?
-		send_file 'public/img/default_avatar.gif', :type => :gif
+		send_file 'public/img/default_avatar.png', :type => :png
 	else
 		content_type session[:user].avatar_type
 		Base64.decode64(session[:user].avatar)
