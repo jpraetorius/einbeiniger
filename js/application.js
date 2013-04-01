@@ -10,7 +10,7 @@ $(document).ready(function() {
 	  $(this).toggleClass('icon-remove-circle icon-trash icon-large text-error')
 	  $(this).closest('tr').toggleClass('error')
 	  var id = $(this).data("id")
-	  var vals = $('#delete-ids').val().split(",");
+	  var vals = $('#delete_ids').val().split(",");
 	  
 	  if (addValue) {
 	    vals.push(id);
@@ -32,7 +32,7 @@ $(document).ready(function() {
 	  else if (vals.length > 1) {
 	    newval = vals.join(",");
 	  }
-	  $('#delete-ids').val(newval);
+	  $('#delete_ids').val(newval);
 	  if (vals.length == 0){
 	    $('#delete-button').addClass('disabled').attr('disabled');
 	  }

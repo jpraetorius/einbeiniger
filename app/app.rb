@@ -79,6 +79,10 @@ helpers do
 	def random_string(secure = defined? SecureRandom)
 		secure ? SecureRandom.hex(32) : "%032x" % rand(2**128-1)
 	end
+
+	def object_id val
+		BSON::ObjectId.from_string(val)
+	end
 end
 
 # route handlers
@@ -264,3 +268,21 @@ post '/settings' do
 		redirect '/'
 	end
 end
+
+post '/registrations' do
+	authenticated?
+	clear_csrf_tag
+	if (params[:action].eql? 'delete')
+		ids = params[:delete_ids].split(',')
+		ids.each do |id|
+			logger.info "About to remove id #{id}''"
+			settings.registrations.remove({"_id" => object_id(id)})
+		end
+		flash[:message] = "Anmeldungen gelöscht"
+		redirect '/registrations'
+	elsif (params[:action].eql? 'search')
+		redirect '/registrations'
+	end
+	redirect '/registrations'
+end
+			

@@ -10,13 +10,14 @@
   <div class="span9">
     <h2>Anmeldungen</h2>
     <p class="lead">Es sind momentan <span id="counter"><%=@count%></span> Anmeldungen in der Warteschleife</p>
-    <form class="form-inline">
+    <form class="form-inline" action="/registrations" method="post">
       <label>Anmeldungen filtern:</label>
-      <input type="text" class="input-small" placeholder="Name">
-      <input type="text" class="input-medium" placeholder="Tags">
-      <button type="submit" class="btn">Suchen</button>
-      <input type="hidden" id="delete-ids" name="delete-ids" value=""/>
-      <button type="submit" class="btn btn-danger disabled" id="delete-button" disabled>Markierte löschen</button>
+      <input type="text" name="name" class="input-small" placeholder="Name">
+      <input type="text" name="tags" class="input-medium" placeholder="Tags">
+      <button type="submit" name="action" value="search" class="btn">Suchen</button>
+      <input type="hidden" id="delete_ids" name="delete_ids" value=""/>
+      <button type="submit" name="action" value="delete" class="btn btn-danger disabled" id="delete-button" disabled>Markierte löschen</button>
+      <%== csrf_tag %>
     </form>
 
     <table class="table table-striped table-hover" id="registrations-table">
