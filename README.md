@@ -1,6 +1,6 @@
 # Der halbautomatische Einbeinige (für WRINT)
 
-**Der halbautomatische Einbeinige**(DhE) ist ein Tool, mit dem die Anrufer der Sendereihe "Ferngespräche" für die Sendungssamllung [WRINT](http://wrint.de) verwaltet werden können.
+**Der halbautomatische Einbeinige**(DhE) ist ein Tool, mit dem die Anrufer der Sendereihe "Ferngespräche" für die Sendungssammlung [WRINT](http://wrint.de) verwaltet werden können.
 
 Sie ist basierend auf [Sinatra](http://www.sinatrarb.com/) und [MongoDB](http://http://www.mongodb.org/) gebaut und verwaltet einfach nur ein paar Kernangaben der Anrufer.
 
@@ -22,11 +22,15 @@ Das Backend selber hat drei Unterfunktionen
 * Übersicht: zeigt kurz die aktuelle Konfiguration und die eingegangenen Anmeldungen
 * Anmeldungen: listet die Anmeldungen auf, erlaubt das Suchen und Löschen von Anmeldungen
 * Einstellungen: enthält die Settings für die Applikation _und_ den angemeldeten User. Hier können diese entsprechend abgeändert werden.
+
 #### Anmeldungen
 Die Übersichtsseite der Anmeldungen ist als Haupt-Tool beim Senden gedacht (oder bei der Vorbereitung auf eine Sendung). Per Default werden hier alle Anmeldungen (aufsteigend nach dem Anmeldedatum sortiert) angezeigt. Dabei werden nur eine Handvoll von Daten zur Orientierung angezeigt. Die vollen Details eines Eintrags lassen sich über das Lupen-Symbol aufrufen.
+
 Über das Löschsymbol lassen sich Einträge als zum Löschen markieren, ein erneuter Klick nimmt diese Markierung zurück. Über den Button 'Markierte löschen' werden die markierten Einträge gelöscht.
+
 Die Suchmaske erlaubt es in den vorhandenen Anmeldungen zu suchen. Dabei kann nach dem Namen des Hörenden gesucht werden (diese Suche ist unscharf und findet den Suchstring auch als Wortteil; die Suche nach 'test' findet also 'test', 'test2', 'tester' und auch 'attest'). Ausserdem kann nach Tags gesucht werden (mehrere Tags können per Komma oder Leerzeichen getrennt werden). Wird in beiden Feldern etwas eingegeben, so werden die Parameter per _UND_ verknüpft, es werden also nur die Einträge gefunden, die allen Bedingungen entsprechen.
-Tags zu Anmeldungen lassen sich in der Detailansicht vergeben. Sie dienen der Markierung von Anmeldungen in der Sendungsvorbereitung (und dann dem späteren Wiederauffinden). Ein neues Tag fügt man einfach in der Textbox hinzu, das Tag wird per <Return> abgeschlossen.
+
+Tags zu Anmeldungen lassen sich in der Detailansicht vergeben. Sie dienen der Markierung von Anmeldungen in der Sendungsvorbereitung (und dann dem späteren Wiederauffinden). Ein neues Tag fügt man einfach in der Textbox hinzu, das Tag wird per &lt;Return&gt; abgeschlossen.
 
 ## Setup
 `bundle install` sollte die benötigten Ruby Dependencies installieren. Daneben wird eine auf dem Standard-Port laufende MongoDB Instanz erwartet, die keine weitere Authentisierung benötigt.
@@ -38,6 +42,7 @@ Sie legt darin drei Collections für Daten an:
 * `registrations` – für die Anmeldungen von Hörern
 
 Um auf das Backend zuzugreifen muss es in der Collection `users` mindestens einen User geben. Da dessen Password BCrypt gehasht vorliegt, ist es momentan am einfachsten diesen über `irb` zu erstellen:
+    
     user@host:> irb
     irb(main):001:0> $LOAD_PATH << 'app/lib'
     irb(main):002:0> require 'user'
