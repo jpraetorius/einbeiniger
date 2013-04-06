@@ -342,7 +342,15 @@ end
 post '/tags' do
 	authenticated?
 	check_xhr_csrf_tag
-	puts params[:id]
-	puts params[:tags]
+	id = params[:id]
+	tags = params[:tags].split(',')
+
+	registration = settings.registrations.find_one({'_id' => mongodb_id(id)});
+	if !(registration.nil?)
+		r = Registration.new(registration)
+		r.tags = tags
+		settings.registrations.update({'_id' => mongodb_id(id)}, r.to_hash);
+	end
+
 	xhr_csrf_tag
 end
