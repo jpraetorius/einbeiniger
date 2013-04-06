@@ -41,7 +41,7 @@
         <tr class="data">
           <td>
             <i class="icon-remove-circle delete" data-id="<%=registration.id%>" rel="tooltip" title="Zum löschen markieren"> </i>
-            <i class="icon-search details" rel="tooltip" title="Details anzeigen" data-registration="<%=registration.to_json%>"> </i>
+            <i class="icon-search details" rel="tooltip" title="Details anzeigen" data-id="<%=registration.id%>" > </i>
           </td>
           <td><%=registration.name%></td>
           <td><a href="https://twitter.com/<%=registration.twitter%>"><%=registration.twitter%></a></td>
@@ -72,56 +72,60 @@
     <% end %>
   </div>
 </div>
-<!-- Modal -->
-<div id="detailsModal" class="modal hide" tabindex="-1" role="dialog">
+<!-- Modals - having one for each details is a bit brute-force but solves problems with transferring the text via JSON -->
+
+<% @registrations.each do |registration| %>
+<div id="detailsModal-<%=registration.id%>" class="modal hide" tabindex="-1" role="dialog">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="modal-header-label">Anmeldungsdetails</h3>
   </div>
   <div class="modal-body">
     <div class="row-fluid">
-      <div class="span1">
+      <div class="span2">
         <label>Name:</label>
       </div>
       <div class="span4">
-        <span id="details-name">Foo</span>
+        <%=registration.name%>
       </div>
       <div class="span1">
         <label>Tags:</label>
       </div>
-      <div class="span6">
-        <input name="tags" id="tags"/>
+      <div class="span5">
+        <input name="tags" class="tags" value="<%=registration.tags%>"/>
         <span class="help-block">Tags lassen sich später suchen.</span>
       </div>
     </div>
     <div class="row-fluid">
-      <div class="span1">
+      <div class="span2">
         <label>Email:</label>
       </div>
-      <div class="span4">
-        <span id="details-email"><a href="mailto:foo@mail.example">foo@mail.example</a></span>
+      <div class="span10">
+        <a href="mailto:<%=registration.email%>"><%=registration.email%></a>
       </div>
-      <div class="span1">
+    </div>
+    <div class="row-fluid">
+      <div class="span2">
         <label>Twitter:</label>
       </div>
-      <div class="span6">
-        <span id="details-twitter"><a href="https://twitter.com/foo">footwitter</a></span>
+      <div class="span10">
+        <a href="https://twitter.com/"><%=registration.twitter%></a>
       </div>
     </div>
     <div class="row-fluid">
-      <div class="span1">
+      <div class="span2">
         <label>Skype:</label>
       </div>
-      <div class="span4">
-        <span id="details-skype">skypefoo</span>
+      <div class="span10">
+        <%=registration.skype%>
       </div>
     </div>
     <div class="row-fluid">
-      <div class="span1">
+      <div class="span2">
         <label>Themen:</label>
       </div>
-      <div class="span11">
-        <span id="details-topics">foothemen</span>
+      <div class="span10">
+        <%=registration.topics%>
       </div>
     </div>
   </div>
@@ -130,3 +134,4 @@
     <button class="btn btn-primary">Speichern</button>
   </div>
 </div>
+<% end %>

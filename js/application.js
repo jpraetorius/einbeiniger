@@ -5,10 +5,11 @@ $(document).ready(function() {
 	// enable popovers for thw whole text
 	$('#registrations-table .po').popover();
 
-	// make the deatils button trigger the popover
-	$('#registrations-table .details').on("click", function(event){
-		$('#detailsModal').modal('show')
-	});
+	 // make the details button trigger the modal
+    $('#registrations-table .details').on("click", function(event){
+    	var id = $(this).data("id");
+    	$('#detailsModal-'+id).modal('show');
+    });
 
 	// handle the delete icons to mark the tables to delete
 	$('#registrations-table .delete').on("click", function(event){
@@ -47,5 +48,5 @@ $(document).ready(function() {
 	  }
 	});
 
-	$('#tags').tagsInput();
+	$('.tags').tagsInput();
 });

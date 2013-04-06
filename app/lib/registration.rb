@@ -36,7 +36,7 @@ class Registration
 	end
 
 	def to_json
-		JSON::generate(self.to_hash)
+		JSON::fast_generate(self.to_hash)
 	end
 
 	def to_s
