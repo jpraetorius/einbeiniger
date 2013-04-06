@@ -1,10 +1,16 @@
 $(document).ready(function() {
+	// enable tooltips on the icons in the table
 	$('#registrations-table i').tooltip();
 
+	// enable popovers for thw whole text
+	$('#registrations-table .po').popover();
+
+	// make the deatils button trigger the popover
 	$('#registrations-table .details').on("click", function(event){
 		$('#detailsModal').modal('show')
 	});
 
+	// handle the delete icons to mark the tables to delete
 	$('#registrations-table .delete').on("click", function(event){
 	  var addValue = $(this).hasClass('icon-remove-circle');
 	  $(this).toggleClass('icon-remove-circle icon-trash icon-large text-error')

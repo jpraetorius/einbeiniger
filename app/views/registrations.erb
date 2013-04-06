@@ -41,12 +41,12 @@
         <tr class="data">
           <td>
             <i class="icon-remove-circle delete" data-id="<%=registration.id%>" rel="tooltip" title="Zum löschen markieren"> </i>
-            <i class="icon-search details" rel="tooltip" title="Details anzeigen"> </i>
+            <i class="icon-search details" rel="tooltip" title="Details anzeigen" data-registration="<%=registration.to_json%>"> </i>
           </td>
           <td><%=registration.name%></td>
           <td><a href="https://twitter.com/<%=registration.twitter%>"><%=registration.twitter%></a></td>
           <td><a href="mailto:<%=registration.email%>"><%=registration.email%></a></td>
-          <td><%=registration.topics[0..50]%></td>
+          <td><span class="po" data-placement="top" data-trigger="hover" data-delay="300" data-content="<%==registration.topics%>"><%==registration.topics[0..50]%></span></td>
         </tr>
         <% end %>
       </tbody>

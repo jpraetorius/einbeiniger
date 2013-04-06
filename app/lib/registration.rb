@@ -1,3 +1,5 @@
+require 'json'
+
 class Registration
 
 	attr_accessor :id
@@ -31,6 +33,10 @@ class Registration
 			:registered_at => @registered_at,
 			:tags => @tags
 		}
+	end
+
+	def to_json
+		JSON::generate(self.to_hash)
 	end
 
 	def to_s
