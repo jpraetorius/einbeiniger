@@ -72,8 +72,11 @@
     <% end %>
   </div>
 </div>
-<!-- Modals - having one for each details is a bit brute-force but solves problems with transferring the text via JSON -->
 
+<!-- keep the token for submitting from a modal -->
+<span id="xhr_token" class="hide"><%==xhr_csrf_tag%></span>
+
+<!-- Modals - having one for each details is a bit brute-force but solves problems with transferring the text via JSON -->
 <% @registrations.each do |registration| %>
 <div id="detailsModal-<%=registration.id%>" class="modal hide" tabindex="-1" role="dialog">
   <div class="modal-header">
@@ -92,7 +95,7 @@
         <label>Tags:</label>
       </div>
       <div class="span5">
-        <input name="tags" class="tags" value="<%=registration.tags%>"/>
+        <input name="tags" class="tags" id="tags-<%=registration.id%>" value="<%=registration.tags%>"/>
         <span class="help-block">Tags lassen sich später suchen.</span>
       </div>
     </div>
@@ -130,8 +133,9 @@
     </div>
   </div>
   <div class="modal-footer">
+    <span id="message-<%=registration.id%>"></span>
     <button class="btn" data-dismiss="modal" aria-hidden="true">Schliessen</button>
-    <button class="btn btn-primary">Speichern</button>
+    <button class="btn btn-primary tag-store" data-id="<%=registration.id%>">Speichern</button>
   </div>
 </div>
 <% end %>

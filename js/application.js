@@ -14,9 +14,9 @@ $(document).ready(function() {
 	// handle the delete icons to mark the tables to delete
 	$('#registrations-table .delete').on("click", function(event){
 	  var addValue = $(this).hasClass('icon-remove-circle');
-	  $(this).toggleClass('icon-remove-circle icon-trash icon-large text-error')
-	  $(this).closest('tr').toggleClass('error')
-	  var id = $(this).data("id")
+	  $(this).toggleClass('icon-remove-circle icon-trash icon-large text-error');
+	  $(this).closest('tr').toggleClass('error');
+	  var id = $(this).data("id");
 	  var vals = $('#delete_ids').val().split(",");
 	  
 	  if (addValue) {
@@ -49,4 +49,19 @@ $(document).ready(function() {
 	});
 
 	$('.tags').tagsInput();
+
+	$('.tag-store').on('click', function(event){
+		var id = $(this).data("id")
+		var token = $('#xhr_token').text();
+		var tags = $('#tags-'+id).val();
+		$('#message-'+id).removeClass('textSuccess').text('');
+		$.post('/tags', 
+			jQuery.param({xhr_csrf: token, id: id, tags: tags})
+		).done(function(data){
+			$('#xhr_token').text(data);
+			$('#message-'+id).addClass('text-success').text('Tags gespeichert!');
+		}).fail(function(data){
+			$('#message-'+id).addClass('text-error').text('Speichern fehlgeschlagen!');
+		});
+	});
 });

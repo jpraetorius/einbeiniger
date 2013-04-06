@@ -109,7 +109,30 @@ helpers do
 		session[:csrf] = nil
 	end
 
-	# copied form Rack::Protection, as it is not exposed there
+	def xhr_csrf_tag
+		if (session[:xhr_csrf].nil?)
+			token = random_string
+			session[:xhr_csrf] = token
+		else
+			token = session[:xhr_csrf]
+		end
+		token
+	end
+
+	def clear_xhr_csrf_tag
+		session[:xhr_csrf] = nil
+	end
+
+	def check_xhr_csrf_tag
+		token = session[:xhr_csrf]
+		val = params[:xhr_csrf]
+		if !(token.eql?(val))
+			clear_xhr_csrf_tag
+			halt 401, 'go away!'
+		end
+	end
+
+	# copied from Rack::Protection, as it is not exposed there
 	def random_string(secure = defined? SecureRandom)
 		secure ? SecureRandom.hex(32) : "%032x" % rand(2**128-1)
 	end
@@ -316,3 +339,10 @@ post '/registrations' do
 	redirect '/registrations'
 end
 			
+post '/tags' do
+	authenticated?
+	check_xhr_csrf_tag
+	puts params[:id]
+	puts params[:tags]
+	xhr_csrf_tag
+end
