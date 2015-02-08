@@ -5,6 +5,9 @@ $LOAD_PATH << './lib'
 # add bundler for gem handling
 require 'bundler/setup'
 
+# Ruby internals
+require 'date'
+
 # all other dependencies
 require 'sinatra'
 require 'sinatra/flash'
@@ -45,7 +48,51 @@ helpers do
 		else
 			registration_open = reg_setting['value']
 		end
+
+		# see if we need to override it based on the next_date Value
+		reg_date = settings.config.find_one('name' => 'next_date')
+		if (!reg_setting.nil?)
+			next_date = Date.parse(reg_date['value'])
+			today = Date.today
+			diff = (next_date - today).to_i
+			if (!registration_open)
+				# turn on automagically, when the next date is nigh
+				if (diff > 0 && diff <= 3)
+					registration_open = true
+					doc = settings.config.find_one('name' => 'registration_open')
+					id = doc['_id']
+					doc['value'] = @registration_open
+					settings.config.update({"_id" => id}, doc)
+				end
+			else
+				# turn off automagically if the last date has passed
+				if (diff < 0)
+					registration_open = false
+					doc = settings.config.find_one('name' => 'registration_open')
+					id = doc['_id']
+					doc['value'] = @registration_open
+					settings.config.update({"_id" => id}, doc)
+				end
+			end
+		end
+
 		registration_open
+	end
+
+	def next_date
+		reg_date = settings.config.find_one('name' => 'next_date')
+		if (reg_date.nil?)
+			next_date = 'derzeit nicht festgelegt'
+		else
+			next_date = reg_setting['value']
+			d = Date.parse(next_date)
+			if ((d <=> Date.today) < 0)
+				next_date = 'derzeit nicht festgelegt'
+			else
+				next_date = "am #{next_date} geplant"
+			end
+		end
+		next_date
 	end
 
 	def authenticated?
@@ -153,6 +200,7 @@ end
 # route handlers
 get '/' do
 	@registration_open = registration_open?
+	@next_date = next_date
 	erb :index
 end
 
@@ -251,32 +299,25 @@ post '/settings' do
 	authenticated?
 	clear_csrf_tag
 	if (params[:action].eql? 'application')
-		# update application settings
-		if (params[:register]) 
-			@request_register = true
-			flash[:message] = "Anmeldungen sind jetzt zugelassen"
-		else
-			@request_register = false
-			flash[:message] = "Anmeldungen sind jetzt nicht möglich"
-		end
-		doc = settings.config.find_one('name' => 'registration_open')
+		@request_next_date = params[:next_date]
+		doc = settings.config.find_one('name' => 'next_date')
 		if (doc.nil?)
-			doc = {'name' => 'registration_open', 'value' => @request_register}
+			doc = {'name' => 'next_date', 'value' => @request_next_date}
 			settings.config.insert(doc)
 		else
 			id = doc['_id']
-			doc['value'] = @request_register
+			doc['value'] = @request_next_date
 			settings.config.update({"_id" => id}, doc)
 		end
 
-		if (params[:delete_all].eql? 'delete_all_really') 
+		if (params[:delete_all].eql? 'delete_all_really')
 			settings.registrations.remove
 			flash[:message] = "Alle Anmeldungen gelöscht"
 		end
 		redirect '/settings'
 	elsif (params[:action].eql? 'user')
-		@user = session[:user]	
-		
+		@user = session[:user]
+
 		id = @user.id
 		@user.name = params[:username]
 
@@ -286,7 +327,7 @@ post '/settings' do
 			if (pwd.eql?(pwd_confirm))
 				@user.password=pwd
 			else
-				flash[:error] = "Passwort nicht geändert – Angaben stimmten nicht überein" 
+				flash[:error] = "Passwort nicht geändert – Angaben stimmten nicht überein"
 			end
 		end
 
@@ -302,7 +343,7 @@ post '/settings' do
 				@user.avatar = Base64.encode(contents)
 				@user.avatar_type = type
 			else
-				flash[:error] = "Bild nicht gespeichert: zu gross oder falscher Typ" 
+				flash[:error] = "Bild nicht gespeichert: zu gross oder falscher Typ"
 			end
 		end
 
@@ -338,7 +379,7 @@ post '/registrations' do
 	end
 	redirect '/registrations'
 end
-			
+
 post '/tags' do
 	authenticated?
 	check_xhr_csrf_tag

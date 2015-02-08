@@ -24,14 +24,13 @@
 				<form action="/settings" method="post">
 					<fieldset>
 						<legend>Applikationseinstellungen</legend>
-						<label for="register">Registrierungen</label>
-						<div class="switch" data-on="success" data-off="danger" data-animated="false" data-on-label="Ein" data-off-label="Aus">
-							<input type="checkbox" name="register" id="register" <%= registration_open? ? "checked='checked'" : '' %> value="on">
-						</div>
-						<span class="help-block">Wenn der Schalter auf “Ein” steht, können sich die Hörenden anmelden.</span>
+
+						<label for="next_date">Nächste Sendung</label>
+						<input type="datetime" name="next_date" id="next_date" value="<%= @next_date %>">
+						<span class="help-block">Das Datum an dem Du die nächste Sendung planst. Es wird auf der Startseite angezeigt. Ausserdem wird die Registrierung automatisch 3 Tage vorher geöffnet und am Tag nach der Sendung geschlossen.</span>
 
 						<label class="checkbox" for="delete_all">
-							<input type="checkbox" name="delete_all" id="delete_all" value="delete_all_really" />Alle Anmeldungen löschen 
+							<input type="checkbox" name="delete_all" id="delete_all" value="delete_all_really" />Alle Anmeldungen löschen
 						</label>
 						<span class="help-block">Wenn Du diese Checkbox selektierst, werden alle momentan vorhandenen Anmeldungen gelöscht.</span>
 

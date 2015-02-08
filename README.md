@@ -33,7 +33,7 @@ Die Suchmaske erlaubt es in den vorhandenen Anmeldungen zu suchen. Dabei kann na
 Tags zu Anmeldungen lassen sich in der Detailansicht vergeben. Sie dienen der Markierung von Anmeldungen in der Sendungsvorbereitung (und dann dem späteren Wiederauffinden). Ein neues Tag fügt man einfach in der Textbox hinzu, das Tag wird per &lt;Return&gt; abgeschlossen.
 
 ## Setup
-`bundle install` sollte die benötigten Ruby Dependencies installieren. Daneben wird eine auf dem Standard-Port laufende MongoDB Instanz erwartet, die keine weitere Authentisierung benötigt.
+`bundle install` sollte die benötigten Ruby Dependencies installieren. Daneben wird eine auf dem Standard-Port (`27017`) laufende MongoDB Instanz erwartet, die keine weitere Authentisierung benötigt und auf `localhost` (respektive `127.0.0.1`) bindet..
 ## MongoDB
 Die Datenbank die die Applikation verwendet heisst 'einbeiniger'
 Sie legt darin drei Collections für Daten an:
@@ -41,21 +41,21 @@ Sie legt darin drei Collections für Daten an:
 * `users` – für die eingerichteten User
 * `registrations` – für die Anmeldungen von Hörern
 
-Um auf das Backend zuzugreifen muss es in der Collection `users` mindestens einen User geben. Da dessen Password BCrypt gehasht vorliegt, ist es momentan am einfachsten diesen über `irb` zu erstellen:
-    
-    user@host:> irb
-    irb(main):001:0> $LOAD_PATH << 'app/lib'
-    irb(main):002:0> require 'user'
-    irb(main):003:0> require 'mongo'
-    irb(main):004:0> include Mongo
-    irb(main):005:0> u = User.new({})
-    irb(main):006:0> u.name = 'beispiel'
-    irb(main):007:0> u.password = 'geheim'
-    irb(main):008:0> db = MongoClient.new.db('einbeiniger')
-    irb(main):009:0> users = db.collection('users')
-    irb(main):010:0> users.insert(u.to_hash)
+Die DB laesst sich ueber den inkludierten Rakefile via `rake db_create` anlegen.
 
-`settings` enthält momentan nur einen einzigen Wert: `registration_open`, der angibt, ob momentan Anmeldungen entgegengenommen werden, oder nicht. Generell sind Settings als `name` => `value` Paare gespeichert.
+Um auf das Backend zuzugreifen muss es in der Collection `users` mindestens einen User geben. Da dessen Password BCrypt gehasht vorliegen muss, ist es momentan am einfachsten diesen über den Rake-Task `create_user` anzulegen. Der Name des Users und das Passwort werden dabei auf der Console abgefragt. Das Passwort kann hinterher im Backend angepasst werden.
+
+### Settings
+`settings` enthält die Einstellungen zu den 'beweglichen' Teilen der Applikation. Jedes einzelne Applikationssetting wird dabei als einzelnes Dokument gespeichert, das ein `name` => `value` Paar enthält. Bisher gibt es die folgenden Settings:
+
+- `registration_open`: Gibt an, ob die Registrierung als Anrufer möglich ist, oder nicht – `true|false`
+- `next_date`: Gibt das Datum der nächsten geplanten Sendung an. Dieses wird auf der Startseite angezeigt und schaltet automatisch die Registrierung ein, falls dieses Datum nicht weiter als drei Tage in der Zukunft liegt.
+
+### Users
+Todo
+
+### Registrations
+Todo
 
 ## Sinatra App
 Die zusätzlich zu Sinatra eingebundenen Gems dienen vor allem der Absicherung der Applikation. So kommt [RackProtection](https://github.com/rkh/rack-protection) zum Einsatz, so dass neben den Basiseinstellungen auch AuthTokens beim submitten der Forms notwendig sind. Ausserdem wird auf erubis gesetzt, bei dem das automatische HTML-Escaping der Ausgabe eingeschaltet ist.
