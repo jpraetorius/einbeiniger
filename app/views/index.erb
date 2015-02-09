@@ -9,10 +9,13 @@
         <h1 class="hidden-phone hidden-tablet">Der <span id="halbautomatisch" class="script">halbautomatische</span> <span id="einbeinig">Einbeinige</span></h1>
         <p class="lead">Der halbautomatische Einbeinige ist das Tool, mit dem <a href="https://twitter.com/holgi">Holgi</a> seine Anrufer für die <a href="http://www.wrint.de/category/ferngespraeche/">Ferngespräche</a> in WRINT verwaltet. Wenn Du Holgi <em>Deine</em> Geschichte erzählen willst: trag Dich ein.</p>
         <%if @registration_open == true%>
+        <div class="well well-large alert-success">
+          <i class="icon-unlock icon-large"> </i><strong>Geöffnet</strong>! Die nächste Sendung ist <%=@next_date%>.
+        </div>
         <a class="btn btn-large btn-success" href="/register">Trag Dich ein!</a>
         <%else%>
         <div class="well well-large alert-info">
-          <i class="icon-lock icon-large"> </i><strong>Geschlossen</strong> – Momentan ist die Anmeldung nicht möglich. Bitte <strong><a href="#">schau hier</a></strong>, wann die nächsten Ferngespräche sind. Die Anmeldung öffnet typischerweise 3 Tage vorher – dann kannst Du noch einmal vorbeischauen.
+          <i class="icon-lock icon-large"> </i><strong>Geschlossen</strong> – Momentan ist die Anmeldung nicht möglich. Die nächste Sendung ist <%=@next_date%>. Die Anmeldung öffnet typischerweise 3 Tage vorher – dann kannst Du noch einmal vorbeischauen.
         </div>
         <%end%>
       </div>

@@ -23,7 +23,7 @@ require 'user'
 
 set :erb, :escape_html => true
 use Rack::Session::Pool
-use Rack::Protection, {:use => [:form_token, :remote_referrer]}
+use Rack::Protection, {:use => [:form_token, :remote_referrer], :except => [:session_hijacking]}
 use Rack::Protection::EscapedParams
 
 include Mongo
@@ -82,14 +82,23 @@ helpers do
 	def next_date
 		reg_date = settings.config.find_one('name' => 'next_date')
 		if (reg_date.nil?)
+			next_date = nil
+		else
+			next_date = reg_date['value']
+		end
+		next_date
+	end
+
+	def next_date_text
+		reg_date = next_date
+		if (reg_date.nil?)
 			next_date = 'derzeit nicht festgelegt'
 		else
-			next_date = reg_setting['value']
-			d = Date.parse(next_date)
+			d = Date.parse(reg_date)
 			if ((d <=> Date.today) < 0)
 				next_date = 'derzeit nicht festgelegt'
 			else
-				next_date = "am #{next_date} geplant"
+				next_date = "am #{d.strftime('%d.%m.%Y')} geplant"
 			end
 		end
 		next_date
@@ -200,7 +209,7 @@ end
 # route handlers
 get '/' do
 	@registration_open = registration_open?
-	@next_date = next_date
+	@next_date = next_date_text
 	erb :index
 end
 
@@ -225,6 +234,7 @@ end
 
 get '/settings' do
 	authenticated?
+	@next_date = next_date
 	erb :settings, :layout => :admin_layout
 end
 
@@ -304,10 +314,12 @@ post '/settings' do
 		if (doc.nil?)
 			doc = {'name' => 'next_date', 'value' => @request_next_date}
 			settings.config.insert(doc)
+			flash[:message] = "Sendungsdatum gespeichert"
 		else
 			id = doc['_id']
 			doc['value'] = @request_next_date
 			settings.config.update({"_id" => id}, doc)
+			flash[:message] = "Sendungsdatum gespeichert"
 		end
 
 		if (params[:delete_all].eql? 'delete_all_really')
