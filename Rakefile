@@ -17,18 +17,18 @@ task :db_setup do
 
   # Preset Settings
   doc = {'name' => 'next_date', 'value' => '01.01.2000'}
-  settings.config.insert(doc)
+  db.collection('configuration').insert(doc)
   doc = {'name' => 'registration_open', 'value' => false}
-  settings.config.insert(doc)
+  db.collection('configuration').insert(doc)
 end
 
 desc "Creates a new User"
 task :create_user do
   u = User.new({})
   STDOUT.puts('Please enter the Name for the new User: ');
-  name = STDIN.gets
+  name = STDIN.gets.chomp!
   STDOUT.puts('Please enter the Password for the new User: ');
-  password = STDIN.gets
+  password = STDIN.gets.chomp
   u.name = name
   u.password = password
   db = MongoClient.new.db('einbeiniger')
