@@ -16,6 +16,7 @@ require 'mongo'
 require 'json'
 require 'bcrypt'
 require 'erubis'
+require 'rack/throttle'
 
 # internal classes
 require 'registration'
@@ -23,7 +24,11 @@ require 'user'
 
 set :erb, :escape_html => true
 use Rack::Session::Pool
+# allow one post request to login every three seconds
+use Rack::Throttle::Interval, {:min => 3.0, :rules => {:url => [/login/], :method => [:post]}}
+# enforce form tokens and referrer checking, exclude session control due to erratic behavior I've seen in testing
 use Rack::Protection, {:use => [:form_token, :remote_referrer], :except => [:session_hijacking]}
+# ?
 use Rack::Protection::EscapedParams
 
 include Mongo

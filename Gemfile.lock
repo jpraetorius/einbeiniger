@@ -7,6 +7,8 @@ GEM
     daemons (1.1.9)
     erubis (2.7.0)
     eventmachine (1.0.3)
+    improved-rack-throttle (0.9.0)
+      rack (>= 1.0.0)
     mongo (1.8.4)
       bson (~> 1.8.4)
     rack (1.5.2)
@@ -41,6 +43,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt-ruby
   erubis
+  improved-rack-throttle
   mongo
   rack-protection
   sinatra
