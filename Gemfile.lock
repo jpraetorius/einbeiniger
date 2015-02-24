@@ -4,6 +4,8 @@ GEM
     backports (3.1.1)
     bcrypt-ruby (3.0.1)
     bson (1.8.4)
+    bson_ext (1.8.4)
+      bson (~> 1.8.4)
     daemons (1.1.9)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -42,6 +44,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt-ruby
+  bson_ext
   erubis
   improved-rack-throttle
   mongo
