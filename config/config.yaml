@@ -1,0 +1,10 @@
+---
+siteadmin:
+  name: siteadmin
+  pwd: df1c2b52b3b14e9b2e34cf9d270843ca
+adminuser:
+  name: adminuser
+  pwd: 4961155d5ec71ea217217f0692173502
+appuser:
+  name: appuser
+  pwd: 1ce75a06d9820d7385a1a7158414c276
