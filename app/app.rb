@@ -7,6 +7,7 @@ require 'bundler/setup'
 
 # Ruby internals
 require 'date'
+require 'yaml'
 
 # all other dependencies
 require 'sinatra'
@@ -36,7 +37,12 @@ include BCrypt
 
 # setup
 configure do
+	# load auth information
+	users = YAML.load_file('config/config.yaml')
+	appuser = users['appuser']
 	@db = MongoClient.new("127.0.0.1", 27017).db('einbeiniger')
+	# Authenticate, load auth from File
+	@db.authenticate(appuser['name'], appuser['pwd'])
 	set :users, @db.collection('users');
 	set :registrations, @db.collection('registrations')
 	set :config, @db.collection('configuration')
