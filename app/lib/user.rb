@@ -2,13 +2,14 @@ require 'bcrypt'
 
 class User
 
+	include BCrypt
+
 	attr_accessor :id
 	attr_accessor :password_hash
 	attr_accessor :name
 	attr_accessor :avatar
 	attr_accessor :avatar_type
 
-	include BCrypt
 
 	def initialize(mongo_hash_data)
 		self.id = mongo_hash_data['_id']

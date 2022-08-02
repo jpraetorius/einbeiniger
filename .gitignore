@@ -1,3 +1,4 @@
 dist/
 data/
+vendor/
 .DS_Store
