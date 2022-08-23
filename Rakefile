@@ -46,7 +46,7 @@ namespace :einbeiniger do
       mkdir_p DIST_JS_DIR
       jsfiles = FileList[JS_SRC_DIR+'/*.js']
       #@cat $(JS_SRC_DIR)/jquery-1.9.1.js $(JS_SRC_DIR)/bootstrap-dropdown.js $(JS_SRC_DIR)/bootstrap-tooltip.js $(JS_SRC_DIR)/bootstrap-popover.js $(JS_SRC_DIR)/bootstrap-modal.js $(JS_SRC_DIR)/jquery.tagsinput.min.js $(JS_SRC_DIR)/bootstrapSwitch.js $(JS_SRC_DIR)/application.js > $(DIST_JS_DIR)/app.js
-      sh("uglifyjs #{jsfiles} -c warnings=false > #{DIST_JS_DIR}/app.min.js")
+      sh("/Users/jpr/.nvm/versions/node/v16.14.0/lib/node_modules/uglify-js/bin/uglifyjs #{jsfiles} > #{DIST_JS_DIR}/app.min.js")
       print "\t #{CHECK}\n"
     end
 
@@ -54,7 +54,7 @@ namespace :einbeiniger do
     task :build_less do
       print "Building CSS..."
       mkdir_p DIST_CSS_DIR
-      sh("recess --compress #{LESS_SRC_DIR}/bootstrap.less > #{DIST_CSS_DIR}/app.css")
+      sh("lessc --compress #{LESS_SRC_DIR}/bootstrap.less > #{DIST_CSS_DIR}/app.css")
       print "\t\t #{CHECK}\n"
     end
 
@@ -63,7 +63,7 @@ namespace :einbeiniger do
       print "Building Images..."
       mkdir_p DIST_IMG_DIR
       FileList["#{IMG_SRC_DIR}/*"].each do |file|
-        sh("imagemin #{file} #{DIST_IMG_DIR}")
+        sh("cp #{file} #{DIST_IMG_DIR}")
       end
       print "\t #{CHECK}\n"
     end
